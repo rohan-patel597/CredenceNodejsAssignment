@@ -2,15 +2,9 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-
 const movieRoutes = require('./api/routes/movies');
 
-mongoose.connect('mongodb+srv://Rohan-nodejs-assignment:'+ process.env.MONGO_ATLAS_PW + '@nodejs-cluster-re8n2.mongodb.net/test?retryWrites=true&w=majority', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
-mongoose.Promise = global.Promise;
+console.log('Using in-memory data store (no MongoDB required)');
 app.use(morgan('dev'));
 app.use('/uploads', express.static('uploads'));
 app.use(bodyParser.urlencoded({extended: false}));

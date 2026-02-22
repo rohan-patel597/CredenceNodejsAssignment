@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
+const crypto = require('crypto');
 const multer = require('multer');
 
 
@@ -79,7 +79,7 @@ router.get('/', (req, res ,next) => {
 // handling the post request to post new items
 router.post('/', upload.single('movieImage'), (req, res ,next) => {
     const movie = new Movie({
-        _id: new mongoose.Types.ObjectId(),  // creatre a unique ID for each items
+        _id: crypto.randomBytes(12).toString('hex'),  // create a unique ID for each item
         name: req.body.name,
         movieImage: req.file.path,
         summary: req.body.summary
@@ -148,7 +148,7 @@ router.patch('/:movieId', (req, res, next) => {
     for (const ops of req.body) {
         updateOps[ops.propName] = ops.value;
     }
-    Movie.update({ _id: id }, { $set: updateOps })
+    Movie.updateOne({ _id: id }, { $set: updateOps })
         .exec()
         .then( result => {
             res.status(200).json({
@@ -172,7 +172,7 @@ router.patch('/:movieId', (req, res, next) => {
 // deleting the items from database using the ID of item you wanna delete
 router.delete('/:movieId', (req, res, next) => {
     const id = req.params.movieId
-    Movie.remove({_id : id})
+    Movie.deleteOne({_id : id})
         .exec()
         .then(result => {
             res.status(200).json({
